@@ -1,10 +1,20 @@
 import { ajoutListenersAvis, ajoutListenerEnvoyerAvis } from "./avis.js";
+//Récupération des pièces eventuellement stockées dans le localStorage
+let pieces = window.localStorage.getItem('pieces');
 
-// Récupération des pièces depuis le fichier JSON
-const reponse = await fetch("http://localhost:8081/pieces");
-const pieces = await reponse.json();
-ajoutListenerEnvoyerAvis();
-console.log(pieces);
+if (pieces === null){
+    // Récupération des pièces depuis l'API
+    const reponse = await fetch('http://localhost:8081/pieces/');
+    pieces = await reponse.json();
+    // Transformation des pièces en JSON
+    const valeurPieces = JSON.stringify(pieces);
+    // Stockage des informations dans le localStorage
+    window.localStorage.setItem("pieces", valeurPieces);
+}else{
+    pieces = JSON.parse(pieces);
+}
+// on appel la fonction pour ajouter le listener au formulaire
+ajoutListenerEnvoyerAvis()
 
 function genererPieces(pieces){
     for (let i = 0; i < pieces.length; i++) {
@@ -27,20 +37,20 @@ function genererPieces(pieces){
         descriptionElement.innerText = article.description ?? "Pas de description pour le moment.";
         const stockElement = document.createElement("p");
         stockElement.innerText = article.disponibilite ? "En stock" : "Rupture de stock";
+        //Code ajouté
         const avisBouton = document.createElement("button");
         avisBouton.dataset.id = article.id;
         avisBouton.textContent = "Afficher les avis";
         
         // On rattache la balise article a la section Fiches
         sectionFiches.appendChild(pieceElement);
-        // On rattache l’image à pieceElement (la balise article)
         pieceElement.appendChild(imageElement);
         pieceElement.appendChild(nomElement);
         pieceElement.appendChild(prixElement);
         pieceElement.appendChild(categorieElement);
-        //Ajout des éléments au DOM pour l'exercice
         pieceElement.appendChild(descriptionElement);
         pieceElement.appendChild(stockElement);
+        //Code aJouté
         pieceElement.appendChild(avisBouton);
     
      }
@@ -49,7 +59,7 @@ function genererPieces(pieces){
 
 genererPieces(pieces);
 
- //gestion des bouttons 
+ //gestion des boutons 
 const boutonTrier = document.querySelector(".btn-trier");
 
 boutonTrier.addEventListener("click", function () {
@@ -117,7 +127,6 @@ document.querySelector('.abordables')
     .appendChild(pElement)
     .appendChild(abordablesElements);
 
-//Code Exercice 
 const nomsDisponibles = pieces.map(piece => piece.nom)
 const prixDisponibles = pieces.map(piece => piece.prix)
 
@@ -148,3 +157,9 @@ inputPrixMax.addEventListener('input', function(){
     document.querySelector(".fiches").innerHTML = "";
     genererPieces(piecesFiltrees);  
 })
+
+// Ajout du listener pour mettre à jour des données du localStorage
+const boutonMettreAJour = document.querySelector(".btn-maj");
+boutonMettreAJour.addEventListener("click", function () {
+   window.localStorage.removeItem("pieces");
+});

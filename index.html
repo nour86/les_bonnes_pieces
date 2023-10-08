@@ -27,10 +27,14 @@
 				<h3>Ajouter un avis</h3>
 					<form class="formulaire-avis">
 					Identifiant de la pièce :<br>
-					<input type="number" name="piece-id"><br>Nom d'utilisateur :<br>
+					<input type="number" name="piece-id" min="1" max="6"><br>Nom d'utilisateur :<br>
 					<input type="text" name="utilisateur"><br>Avis :<br>
 					<input type="text" name="commentaire"><br>
+					<label for etoiles>nombres d'etoiles : </label><br>
+					<input type="number" name="etoiles" min="0" max="5">
 					<button>Envoyer</button>
+					<h3>Données</h3>
+					<button class="btn-maj">Mettre à jour les pièces</button>
 				</form>
 			</section>
 

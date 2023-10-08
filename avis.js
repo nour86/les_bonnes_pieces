@@ -7,8 +7,7 @@ export function ajoutListenersAvis() {
      piecesElements[i].addEventListener("click", async function (event) {
  
         const id = event.target.dataset.id;
-        console.log(id);
-        const reponse = await fetch("http://localhost:8081/pieces/"+id+"/avis");
+        const reponse = await fetch("http://localhost:8081/pieces/" + id + "/avis");
         const avis = await reponse.json();
         const pieceElement = event.target.parentElement;
 
@@ -21,27 +20,27 @@ export function ajoutListenersAvis() {
      });
  
     }
- 
  }
-
+ 
  export function ajoutListenerEnvoyerAvis() {
-    const formulaireAvis=document.querySelector(".formulaire-avis");
-    formulaireAvis.addEventListener("submit",function(event){
-        event.preventDefault();
-        const avis = {
-            pieceId: parseInt(event.target.querySelector("[name=piece-id]").value),
-            utilisateur: event.target.querySelector("[name=utilisateur").value,
-            commentaire: event.target.querySelector("[name=commentaire]").value,
-         };
-         const chargeUtile=JSON.stringify(avis);
-         
-        fetch("http://localhost:8081/avis", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: chargeUtile
-        });
-
+    const formulaireAvis = document.querySelector(".formulaire-avis");
+    formulaireAvis.addEventListener("submit", function (event) {
+    event.preventDefault();
+    // Création de l’objet du nouvel avis.
+    const avis = {
+        pieceId: parseInt(event.target.querySelector("[name=piece-id]").value),
+        utilisateur: event.target.querySelector("[name=utilisateur]").value,
+        commentaire: event.target.querySelector("[name=commentaire]").value,
+        nbEtoiles: parseInt(event.target.querySelector("[name=nbEtoiles]").value)
+    };
+    // Création de la charge utile au format JSON
+    const chargeUtile = JSON.stringify(avis);
+    // Appel de la fonction fetch avec toutes les informations nécessaires
+    fetch("http://localhost:8081/avis", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: chargeUtile
+    });
+    });
     
-    })
-
  }
